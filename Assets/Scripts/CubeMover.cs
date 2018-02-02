@@ -16,7 +16,7 @@ public class CubeMover : MonoBehaviour
 	public bool MoveHorizontalAndVertical = true;
 
 	List<GameObject> _internalCubes;
-	CubeVelocity v;
+	CubeVelocity velocity;
 	Vector3 randomDirection = Vector3.zero;
 
 	public void SetInternalCubes(List<GameObject> cs)
@@ -28,8 +28,8 @@ public class CubeMover : MonoBehaviour
 			cube.tag = "WanderingCube";
 
 			cube.AddComponent<CubeVelocity>();
-			v = cube.GetComponent<CubeVelocity>();
-			v.Velocity = Random.Range(MinXYSpeedPerSecond, MaxXYSpeedPerSecond);
+			velocity = cube.GetComponent<CubeVelocity>();
+			velocity.Velocity = Random.Range(MinXYSpeedPerSecond, MaxXYSpeedPerSecond);
 
 			cube.AddComponent<Colorizer>();
 
@@ -66,7 +66,7 @@ public class CubeMover : MonoBehaviour
 
 		foreach (GameObject cube in _internalCubes)
 		{
-			v = cube.GetComponent<CubeVelocity>();
+			velocity = cube.GetComponent<CubeVelocity>();
 
 			if (MoveHorizontalAndVertical)
 			{
@@ -80,10 +80,10 @@ public class CubeMover : MonoBehaviour
 			else
 				randomDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
 
-			v.Direction = (1 - SteerOldDirection) * randomDirection + SteerOldDirection * v.PreviousDirection;
-			v.PreviousDirection = v.Direction;
+			velocity.Direction = (1 - SteerOldDirection) * randomDirection + SteerOldDirection * velocity.PreviousDirection;
+			velocity.PreviousDirection = velocity.Direction;
 
-			Vector3 _translationThisFrame = v.Velocity * v.Direction * Time.deltaTime;
+			Vector3 _translationThisFrame = velocity.Velocity * velocity.Direction * Time.deltaTime;
 
 			GameObject collidee;
 			bool _willCollide = WouldMovingCubeCollide(cube, _translationThisFrame, out collidee);
