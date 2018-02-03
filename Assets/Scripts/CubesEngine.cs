@@ -26,9 +26,9 @@ namespace CreativeWarlock.CubeCollisionECS
 
 		public IEntityViewsDB entityViewsDB { get; set; }
 
-//#if TURBO_EXAMPLE
-//        public const uint NUM_OF_THREADS = 8; //must be divisible by 4 for this exercise as I am not handling reminders
-//#endif
+#if TURBO_EXAMPLE
+        public const uint NUM_OF_THREADS = 8; //must be divisible by 4 for this exercise as I am not handling reminders
+#endif
 
 		IEnumerator Update()
 		{
@@ -93,21 +93,11 @@ namespace CreativeWarlock.CubeCollisionECS
 			//that must be executed on the entities.         
 			int count = 0;
 
-//#if FIRST_TIER_EXAMPLE || SECOND_TIER_EXAMPLE
-//            DataStructures.FasterReadOnlyList<CubeEntityView> _entityViews;
-//#endif
-//#if FOURTH_TIER_EXAMPLE || THIRD_TIER_EXAMPLE
             CubeEntityView[] _entityViews;
-//#endif
-			do
-			{
-//#if FIRST_TIER_EXAMPLE || SECOND_TIER_EXAMPLE
-//                _entityViews = entityViewsDB.QueryEntityViews<CubeEntityView>();
-//                count = _entityViews.Count;
-//#endif
-//#if FOURTH_TIER_EXAMPLE || THIRD_TIER_EXAMPLE
+
+			do {
                 _entityViews = entityViewsDB.QueryEntityViewsAsArray<CubeEntityView>(out count);
-//#endif
+
 				yield return null;
 			} while (count == 0);
 
@@ -143,12 +133,6 @@ namespace CreativeWarlock.CubeCollisionECS
 #endif
 		}
 
-		/// <summary>
-		/// This is just to be sure everything is actually running
-		/// it also shows how you can run instruction on the mainthread
-		/// that operates on data computed on other threads. It's all about
-		/// which runners the single IEnumerator/ITaskRoutine runs on!
-		/// </summary>
 		class TestEnumerator : IEnumerator
 		{
 			public object Current { get { return null; } }
@@ -160,7 +144,7 @@ namespace CreativeWarlock.CubeCollisionECS
 
 			public bool MoveNext()
 			{
-				if (_totalCount != NumberOfEntities.value * 4)
+				if (_totalCount != NumberOfEntities.numberOfEntities * 4)
 					throw new Exception("something went wrong");
 				else
 					_totalCount = 0;
@@ -178,28 +162,16 @@ namespace CreativeWarlock.CubeCollisionECS
 			PrintTimeEntityView _printEntityView;
 		}
 
-		/// <summary>
-		/// The meaningless set of operations that 
-		/// run on a set of EntityViews
-		/// </summary>
 		class CubeEnumerator : IEnumerator
 		{
 			private int _countn;
 			private int _start;
-//#if FIRST_TIER_EXAMPLE || SECOND_TIER_EXAMPLE
-//            private DataStructures.FasterReadOnlyList<CubeEntityView> _entityViews;
-//#else
+
 			CubeEntityView[] _entityViews;
-//#endif
 
 			public object Current { get { return null; } }
-//#if FIRST_TIER_EXAMPLE || SECOND_TIER_EXAMPLE
-//            public CubeEnumerator(DataStructures.FasterReadOnlyList<CubeEntityView> entityViews, int start, int countn)
-//            {
-//#else
 			public CubeEnumerator(CubeEntityView[] entityViews, int start, int countn)
 			{
-//#endif
 				_entityViews = entityViews;
 				_start = start;
 				_countn = countn;
@@ -218,36 +190,14 @@ namespace CreativeWarlock.CubeCollisionECS
 				{
 					for (int j = 0; j < 4; j++)
 					{
-//#if SECOND_TIER_EXAMPLE || THIRD_TIER_EXAMPLE
-                        ICubeComponent cubeEntityView = entities[index].entityView;
+						var x = (realTarget.x - entities[index].position.x);
+						var y = (realTarget.y - entities[index].position.y);
+						var z = (realTarget.z - entities[index].position.z);
 
-                        var position = cubeEntityView.position;
-
-                        var x = (realTarget.x - position.x);
-                        var y = (realTarget.y - position.y);
-                        var z = (realTarget.z - position.z);
-
-                        var sqrdmagnitude = x * x + y * y + z * z;
-
-                        cubeEntityView.position.Set(x / sqrdmagnitude, y / sqrdmagnitude, z / sqrdmagnitude);
-//#elif FOURTH_TIER_EXAMPLE
-//                        var x = (realTarget.x - entities[index].position.x);
-//                        var y = (realTarget.y - entities[index].position.y);
-//                        var z = (realTarget.z - entities[index].position.z);
-
-//                        var sqrdmagnitude = x * x + y * y + z * z;
-//                        entities[index].position.x = x * sqrdmagnitude;
-//                        entities[index].position.y = y * sqrdmagnitude;
-//                        entities[index].position.z = z * sqrdmagnitude;
-//#endif
-//#if FIRST_TIER_EXAMPLE
-//                        var position = entities[index].entityView.position;
-
-//                        var direction = realTarget - position;
-//                        var sqrdmagnitude = direction.sqrMagnitude;
-
-//                        entities[index].entityView.position = direction / (sqrdmagnitude);
-//#endif
+						var sqrdmagnitude = x * x + y * y + z * z;
+						entities[index].position.x = x * sqrdmagnitude;
+						entities[index].position.y = y * sqrdmagnitude;
+						entities[index].position.z = z * sqrdmagnitude;
 					}
 				}
 //#if TURBO_EXAMPLE
@@ -255,7 +205,6 @@ namespace CreativeWarlock.CubeCollisionECS
 //#else
 				_totalCount += totalCount;
 //#endif
-
 				return false;
 			}
 

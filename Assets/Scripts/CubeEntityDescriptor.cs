@@ -2,7 +2,6 @@
 
 namespace CreativeWarlock.CubeCollisionECS
 {
-	class CubeEntityDescriptor : MixedEntityDescriptor<EntityViewBuilder<CubeEntityView>>
-	{
-	}
+	class CubeEntityDescriptor : MixedEntityDescriptor<EntityStructBuilder<CubeEntityView>>
+	{ }
 }

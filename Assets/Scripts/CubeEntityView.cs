@@ -1,9 +1,12 @@
 ﻿using Svelto.ECS;
+using UnityEngine;
 
 namespace CreativeWarlock.CubeCollisionECS
 {
-	public class CubeEntityView : EntityView
+	public struct CubeEntityView : IEntityStruct
 	{
-		public ICubeComponent entityView;
+		public Vector3 position;
+
+		public int ID { get; set; }
 	}
 }

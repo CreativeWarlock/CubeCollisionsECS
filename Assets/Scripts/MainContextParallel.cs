@@ -19,11 +19,14 @@ namespace CreativeWarlock.CubeCollisionECS
 
 	public class NumberOfEntities
 	{
-		public const int value = 64 * 4000;
+		public const int numberOfEntities = 64; //* 4000
 	}
 
 	public class ParallelCompositionRoot : ICompositionRoot
 	{
+		IContextNotifer _contextNotifier;
+		EnginesRoot _enginesRoot;
+
 		public ParallelCompositionRoot()
 		{
 			QualitySettings.vSyncCount = -1;
@@ -33,31 +36,37 @@ namespace CreativeWarlock.CubeCollisionECS
 
 		void ICompositionRoot.OnContextCreated(UnityContext contextHolder)
 		{
-            var tasksCount = NumberOfEntities.value;
+            var tasksCount = NumberOfEntities.numberOfEntities;
 
+#if DONT_TRY_THIS_AT_HOME
+            for (int i = 0; i < tasksCount; i++)
+            {
+                GameObject crazyness = new GameObject();
+                crazyness.AddComponent<UnityWay>();
+            }
+#else
 			_enginesRoot = new EnginesRoot(new Svelto.ECS.Schedulers.Unity.UnitySumbmissionEntityViewScheduler());
             IEntityFactory entityFactory = _enginesRoot.GenerateEntityFactory();
 
-            var boidsEngine = new CubesEngine();
-            _enginesRoot.AddEngine(boidsEngine);
+            var cubesEngine = new CubesEngine();
 
-            _contextNotifier.AddFrameworkDestructionListener(boidsEngine);
-
-            var implementorArray = new object[1];
+			_enginesRoot.AddEngine(cubesEngine);
+            _contextNotifier.AddFrameworkDestructionListener(cubesEngine);
 
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
-            for (int i = 0; i < tasksCount; i++)
-            {
-                implementorArray[0] = new Cube();
-                entityFactory.BuildEntity<CubeEntityDescriptor>(i, implementorArray);
 
-            }
+			for (int i = 0; i < tasksCount; i++)
+            {
+				entityFactory.BuildEntity<CubeEntityDescriptor>(i);
+			}
+
             watch.Stop();
             Utility.Console.Log(watch.ElapsedMilliseconds.ToString());
 
             entityFactory.BuildEntity<GUITextEntityDescriptor>(0, 
                 contextHolder.GetComponentsInChildren<PrintIteration>());
+#endif
 		}
 
 		void ICompositionRoot.OnContextInitialized()
@@ -68,9 +77,6 @@ namespace CreativeWarlock.CubeCollisionECS
 			_contextNotifier.NotifyFrameworkDeinitialized();
 			TaskRunner.Instance.StopAndCleanupAllDefaultSchedulerTasks();
 		}
-
-		IContextNotifer _contextNotifier;
-		EnginesRoot _enginesRoot;
 	}
 }
 

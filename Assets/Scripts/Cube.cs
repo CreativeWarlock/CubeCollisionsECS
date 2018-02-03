@@ -2,10 +2,40 @@
 
 namespace CreativeWarlock.CubeCollisionECS
 {
-	public class Cube : ICubeComponent
+	public class Cube : MonoBehaviour, ICubeComponent
 	{
-		public Vector3 velocity { get; set; }
-		public Vector3 position { get; set; }
-		public Quaternion rotation { get; set; }
+		Transform _transform;
+		Vector3 _direction;
+		Vector3 _prevDirection;
+		float _velocity;
+
+		void Start()
+		{
+			_transform = transform;
+		}
+
+		public Vector3 Direction
+		{
+			get { return _direction; }
+			set { _direction = value; }
+		}
+
+		public Vector3 PreviousDirection
+		{
+			get { return _prevDirection; }
+			set { _prevDirection = value; }
+		}
+
+		public Vector3 Position
+		{
+			get { return _transform.position; }
+			set { _transform.position = value; }
+		}
+
+		public float Velocity
+		{
+			get { return _velocity; }
+			set { _velocity = value; }
+		}
 	}
 }
