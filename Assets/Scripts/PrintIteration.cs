@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CreativeWarlock.CubeCollisionECS.Components;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace CreativeWarlock.CubeCollisionECS

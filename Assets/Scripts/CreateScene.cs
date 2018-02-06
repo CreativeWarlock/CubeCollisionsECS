@@ -2,9 +2,9 @@
 
 public class CreateScene : MonoBehaviour
 {
-	public int _planeWidth = 50; // user can edit this in-editor
-	public static float PlaneWidth;
-	public static float HalfPlaneWidth;
+	public int _planeWidth = 50;
+	public static float PlaneWidth = 50f;
+	public static float HalfPlaneWidth = 10f;
 
 	public float PlaneOffset = 10f;
 
