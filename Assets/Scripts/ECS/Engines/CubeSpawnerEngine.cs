@@ -10,8 +10,8 @@ namespace CreativeWarlock.CubeCollisionECS.Engines
 	{
 		IEntityFactory _entityFactory;
 
-		int _numberOfCubesToSpawn = 1024;
-		float _cubeScale = 0.1f;
+		int _numberOfCubesToSpawn = 1024;   // TODO: Let the user change this parameter
+		float _cubeScale = 0.5f;			// TODO: Let the user change this parameter
 
 		public CubeSpawnerEngine(IEntityFactory entityFactory)
 		{

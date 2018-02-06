@@ -1,6 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+///  Currently not used in the project.
+///  TODO: Move color changing logic into the CubesEngine
+/// </summary>
+
 public class Colorizer : MonoBehaviour
 {
 	public Vector3 maxAbsOfPositions;
