@@ -22,18 +22,19 @@ namespace CreativeWarlock.CubeCollisionECS
 			_enginesRoot = new EnginesRoot(new Svelto.ECS.Schedulers.Unity.UnitySumbmissionEntityViewScheduler());
             IEntityFactory entityFactory = _enginesRoot.GenerateEntityFactory();
 
-            var cubesEngine = new CubesEngine();
-
-			_enginesRoot.AddEngine(cubesEngine);
-            _contextNotifier.AddFrameworkDestructionListener(cubesEngine);
-
 			CubeSpawnerEngine cubeSpawnerEngine = new CubeSpawnerEngine(entityFactory);
-
+			//_contextNotifier.AddFrameworkInitializationListener(cubeSpawnerEngine);
 			_enginesRoot.AddEngine(cubeSpawnerEngine);
+
+			var cubesEngine = new CubesEngine();
+			_contextNotifier.AddFrameworkDestructionListener(cubesEngine);
+			_enginesRoot.AddEngine(cubesEngine);
 		}
 
 		void ICompositionRoot.OnContextInitialized()
-		{ }
+		{
+			Debug.Log("Initializing Context");
+		}
 
 		void ICompositionRoot.OnContextDestroyed()
 		{

@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using CreativeWarlock.CubeCollisionECS.EntityViews;
+using Svelto.Context;
 using Svelto.ECS;
 using Svelto.Tasks;
 using UnityEngine;
 
 namespace CreativeWarlock.CubeCollisionECS.Engines
 {
-	class CubesEngine : IQueryingEntityViewEngine,
-						Svelto.Context.IWaitForFrameworkDestruction
+	class CubesEngine : IQueryingEntityViewEngine, IWaitForFrameworkDestruction
 	{
 //#if TURBO_EXAMPLE
 //        SyncRunner _syncRunner;
@@ -140,10 +140,10 @@ namespace CreativeWarlock.CubeCollisionECS.Engines
 				else
 					randomDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
 
-				cubeEntityView.CubeMovementComponent.Direction = (1 - steerOldDirection) * randomDirection + steerOldDirection * cubeEntityView.CubeMovementComponent.PreviousDirection;
-				cubeEntityView.CubeMovementComponent.PreviousDirection = cubeEntityView.CubeMovementComponent.Direction;
+				cubeEntityView.Direction = (1 - steerOldDirection) * randomDirection + steerOldDirection * cubeEntityView.PreviousDirection;
+				cubeEntityView.PreviousDirection = cubeEntityView.Direction;
 
-				Vector3 _translationThisFrame = cubeEntityView.CubeMovementComponent.Velocity * cubeEntityView.CubeMovementComponent.Direction * Time.deltaTime;
+				Vector3 _translationThisFrame = cubeEntityView.Velocity * cubeEntityView.Direction * Time.deltaTime;
 
 				GameObject collidee;
 				bool _willCollide = WouldMovingCubeCollide(cubeEntityView, _translationThisFrame, out collidee);
@@ -151,7 +151,7 @@ namespace CreativeWarlock.CubeCollisionECS.Engines
 				if (_willCollide && blockCollisions)
 				{
 					//Debug.Log( "Cube " + cube + " (bounds.extends = " + cube.GetComponent<BoxCollider>().bounds.extents + ") WOULD HAVE hit (but I prevented it) " + collidee + " alng translation = " + _translationThisFrame );
-					Debug.DrawRay(cubeEntityView.CubeMovementComponent.Transform.position + Vector3.up, _translationThisFrame, Color.green);
+					Debug.DrawRay(cubeEntityView.Transform.position + Vector3.up, _translationThisFrame, Color.green);
 
 					//_translationThisFrame *= -1;
 					//v.PreviousDirection = -1 * v.Direction;
@@ -159,9 +159,9 @@ namespace CreativeWarlock.CubeCollisionECS.Engines
 					//cubeGO.GetComponent<Colorizer>().OnCollisionWasPrevented();
 				}
 				else
-					cubeEntityView.CubeMovementComponent.Transform.position += _translationThisFrame;
+					cubeEntityView.Transform.position += _translationThisFrame;
 
-				cubeEntityView.CubeMovementComponent.Transform.position = CheckMoveLimits(cubeEntityView.CubeMovementComponent.Transform.position);
+				cubeEntityView.Transform.position = CheckMoveLimits(cubeEntityView.Transform.position);
 			}
 
 			Vector3 CheckMoveLimits(Vector3 position)
@@ -186,8 +186,8 @@ namespace CreativeWarlock.CubeCollisionECS.Engines
 				//CubeVelocity v = cube.GetComponent<CubeVelocity>();
 
 				RaycastHit hit;
-				if (blockCollisions && Physics.BoxCast(cubeEntityView.CubeMovementComponent.Transform.position,
-														cubeEntityView.CubeMovementComponent.BoxCollider.bounds.extents,
+				if (blockCollisions && Physics.BoxCast(cubeEntityView.Transform.position,
+														cubeEntityView.BoxCollider.bounds.extents,
 														translation,
 														out hit,
 														Quaternion.identity,

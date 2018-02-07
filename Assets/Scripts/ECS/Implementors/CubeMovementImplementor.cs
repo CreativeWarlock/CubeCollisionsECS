@@ -1,16 +1,12 @@
-﻿using System;
-using CreativeWarlock.CubeCollisionECS.Components;
+﻿using CreativeWarlock.CubeCollisionECS.Components;
+using CreativeWarlock.CubeCollisionECS.EntityViews;
 using UnityEngine;
 
 namespace CreativeWarlock.CubeCollisionECS.Implementors
 {
 	public class CubeMovementImplementor : MonoBehaviour, IImplementor, ICubeMovementComponent
 	{
-		BoxCollider _boxCollider;
-		Vector3 _direction = Vector3.zero;
-		Vector3 _prevDirection = Vector3.zero;
-		Transform _transform;
-		public float _velocity = 1f;
+		CubeEntityView cubeEntityView;
 
 		float MinXYSpeedPerSecond = 1f; // TODO: make it changeable via user input!
 		float MaxXYSpeedPerSecond = 10f; // TODO: make it changeable via user input!
@@ -18,32 +14,32 @@ namespace CreativeWarlock.CubeCollisionECS.Implementors
 		float steerOldDirection = 0.5f; // TODO: make it changeable via user input!
 		bool blockCollisions = true;  // TODO: make it changeable via user input!
 
-		public BoxCollider BoxCollider { get { return _boxCollider; } }
+		public BoxCollider BoxCollider { get { return cubeEntityView.BoxCollider; } }
 
 		public Vector3 Direction {
-			get { return _direction; }
-			set { _direction = value; }
+			get { return cubeEntityView.Direction; }
+			set { cubeEntityView.Direction = value; }
 		}
 
 		public Vector3 PreviousDirection {
-			get { return _prevDirection; }
-			set { _prevDirection = value; }
+			get { return cubeEntityView.PreviousDirection; }
+			set { cubeEntityView.PreviousDirection = value; }
 		}
 
 		public Transform Transform {
-			get { return _transform; }
-			set { _transform = value; }
+			get { return cubeEntityView.Transform; }
+			set { cubeEntityView.Transform = value; }
 		}
 		
 		public float Velocity {
-			get { return _velocity; }
-			set { _velocity = value; }
+			get { return cubeEntityView.Velocity; }
+			set { cubeEntityView.Velocity = value; }
 		}
 
 		void Awake()
 		{
-			_boxCollider = GetComponent<BoxCollider>();
-			_transform = transform;
+			cubeEntityView.BoxCollider = GetComponent<BoxCollider>();
+			cubeEntityView.Transform = transform;
 		}
 	}
 }

@@ -3,7 +3,7 @@ using Svelto.ECS;
 
 namespace CreativeWarlock.CubeCollisionECS.Descriptors
 {
-	class CubeEntityDescriptor : GenericEntityDescriptor<CubeEntityView>
-								//MixedEntityDescriptor<EntityStructBuilder<CubeEntityView>>
+	class CubeEntityDescriptor : //GenericEntityDescriptor<CubeEntityView>
+								MixedEntityDescriptor<EntityStructBuilder<CubeEntityView>>
 	{ }
 }

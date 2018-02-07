@@ -16,13 +16,12 @@ namespace CreativeWarlock.CubeCollisionECS.Engines
 		public CubeSpawnerEngine(IEntityFactory entityFactory)
 		{
 			_entityFactory = entityFactory;
-
 			CreateCubes();
 		}
 
 		void CreateCubes()
 		{
-			// with a GO holder for our cubes the FPS are higher!
+			// with a GO holding all the cubes the FPS are higher!
 			GameObject _cubeHolder = new GameObject("Cubes-Holder");
 
 			for (int i = 0; i < _numberOfCubesToSpawn; i++)
@@ -30,8 +29,6 @@ namespace CreativeWarlock.CubeCollisionECS.Engines
 				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 				cube.name = "Cube-" + i;
 				cube.tag = "WanderingCube"; //used for physics layer
-
-				cube.AddComponent<CubeMovementImplementor>();
 
 				cube.AddComponent<Colorizer>();
 
@@ -51,12 +48,13 @@ namespace CreativeWarlock.CubeCollisionECS.Engines
 				cube.transform.localScale = new Vector3(_cubeScale, _cubeScale, _cubeScale);
 				cube.transform.position = new Vector3(
 					Random.Range(-CreateScene.HalfPlaneWidth, CreateScene.HalfPlaneWidth),
-									.1f,
-									Random.Range(-CreateScene.HalfPlaneWidth, CreateScene.HalfPlaneWidth));
+								 .1f,
+								 Random.Range(-CreateScene.HalfPlaneWidth, CreateScene.HalfPlaneWidth));
 				cube.transform.SetParent(_cubeHolder.transform, true);
 
-				_entityFactory.BuildEntity<CubeEntityDescriptor>(cube.GetInstanceID(),
-					cube.GetComponentsInChildren<IComponent>());
+				cube.AddComponent<CubeMovementImplementor>();
+
+				_entityFactory.BuildEntity<CubeEntityDescriptor>(cube.GetInstanceID(), cube.GetComponentsInChildren<IComponent>());
 			}
 		}
 	}
